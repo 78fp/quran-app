@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة فَك | FAK - نظام الاستقلال العاطفي</title>
+    
+    <style>
+        :root {
+            --bg-dark: #0b0f17;
+            --bg-card: #141c28;
+            --bg-input: #0a0e14;
+            --text-primary: #e2e8f0;
+            --text-muted: #8a99ad;
+            --accent-indigo: #6366f1;
+            --accent-indigo-hover: #4f46e5;
+            --accent-rose: #9f1239;
+            --accent-rose-hover: #be123c;
+            --border-color: #222d3d;
+            --border-radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.8;
+            direction: rtl;
+            padding-bottom: 50px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-indigo);
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: none; /* تظهر فقط بعد تسجيل الدخول */
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text-primary);
+        }
+
+        /* Layout & Pages */
+        .container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active-page {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .card-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        /* Reminders Banner */
+        .reminder-banner {
+            background-color: #1a1523;
+            border-right: 4px solid var(--accent-rose);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #fecdd3;
+            font-size: 0.95rem;
+        }
+
+        /* Forms & Inputs */
+        input[type="text"], input[type="email"], textarea, select {
+            width: 100%;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            outline: none;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--accent-indigo);
+        }
+
+        .btn {
+            background-color: var(--accent-indigo);
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-indigo-hover);
+        }
+
+        .btn-danger {
+            background-color: var(--accent-rose);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--accent-rose-hover);
+        }
+
+        /* Quotes Component */
+        .text-quote {
+            border-right: 3px solid var(--accent-indigo);
+            background-color: #0e141f;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .text-quote p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .text-quote .source {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+
+        /* Counter */
+        .counter-box {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .counter-num {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--accent-indigo);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="brand">فَك | FAK</div>
+        <div class="nav-links" id="mainNav">
+            <a onclick="switchPage('homePage', this)" class="active">الرئيسية</a>
+            <a onclick="switchPage('releasePage', this)">مساحة التفريغ</a>
+            <a onclick="switchPage('wisdomPage', this)">السكينة والربط على القلب</a>
+            <span id="navUser" style="color: var(--text-muted); font-size: 0.9rem; margin-right: 15px;"></span>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- 1. الشاشة الأولى عند الفتح: السكينة والربط على القلب -->
+        <div id="welcomePage" class="page-section active-page">
+            <div class="card" style="text-align: center; padding: 40px 20px;">
+                <h2 style="font-size: 1.6rem; margin-bottom: 20px;">قبل أن تبدأ.. خذ نفساً عميقاً</h2>
+                <div class="text-quote" style="text-align: right;">
+                    <p id="welcomeQuoteText">«وَعَسَىٰ أَن تَكْرَهُوا شَيْئًا وَهُوَ خَيْرٌ لَّكُمْ ۖ وَعَسَىٰ أَن تُحِبُّوا شَيْئًا وَهُوَ شَرٌّ لَّكُمْ ۗ وَاللَّهُ يَعْلَمُ وَأَنتُمْ لَا تَعْلَمُونَ»</p>
+                    <div class="source" id="welcomeQuoteSource">- سورة البقرة (216)</div>
+                </div>
+                <button class="btn" onclick="nextToLogin()" style="margin-top: 15px; width: 100%; max-width: 300px;">المتابعة إلى المنصة</button>
+            </div>
+        </div>
+
+        <!-- 2. صفحة تسجيل الدخول -->
+        <div id="loginPage" class="page-section">
+            <div class="card" style="max-width: 500px; margin: 20px auto;">
+                <h2>تسجيل الدخول / إنشاء حساب</h2>
+                <p class="card-subtitle">أدخل اسمك لحفظ تقدمك ومسارك الخاص بشكل آمن.</p>
+                
+                <form onsubmit="handleLogin(event)">
+                    <input type="text" id="userName" placeholder="الاسم أو الاسم المستعار" required>
+                    <input type="email" id="userEmail" placeholder="البريد الإلكتروني" required>
+                    <button type="submit" class="btn" style="width: 100%;">دخول</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 3. الصفحة الرئيسية لوحة التحكم والمسارات -->
+        <div id="homePage" class="page-section">
+            
+            <!-- تنبيهات وحصن سلوكي -->
+            <div class="reminder-banner">
+                <strong>تذكير مهم اليوم:</strong> تذكري ألا تراسلي، ولا تردي فوراً، واستعيدي التحكم بزمام ردود أفعالك.
+            </div>
+
+            <!-- تحديد المسار -->
+            <div class="card">
+                <h2>حدد مسارك الحالي</h2>
+                <p class="card-subtitle">اختر الوضع الذي يناسب حالتك الراهنة لضبط إرشاداتك:</p>
+                <select id="pathSelect" onchange="changePath()">
+                    <option value="detach_present">فك تعلق (الشخص ما زال متواجداً في حياتك/العمل/الدراسة)</option>
+                    <option value="detach_absent">فك تعلق (الشخص غير متواجد)</option>
+                    <option value="move_on">تخطي وتجاوز العلاقة بالكامل</option>
+                </select>
+                <div id="pathInstruction" style="background: #0d131d; padding: 15px; border-radius: 8px; color: var(--text-muted); font-size: 0.9rem; margin-top: 10px;">
+                    التعامل مع شخص متواجد يتطلب رسم حدود صارمة وعدم إظهار أي انفعال أو استجابة سريعة.
+                </div>
+            </div>
+
+            <!-- العداد -->
+            <div class="card">
+                <h2>عداد التوازن والاستقلال</h2>
+                <p class="card-subtitle">رصد الأيام الملتزمة فيها بضبط الانفعال وعدم المبادرة والتواصل.</p>
+                <div class="counter-box">
+                    <div class="counter-num" id="daysCount">0</div>
+                    <p style="color: var(--text-muted);">أيام الاستقرار والالتزام</p>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn" onclick="updateCounter(1)">تسجيل يوم جديد</button>
+                    <button class="btn btn-danger" onclick="resetCounter()">إعادة الضبط</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. صفحة التفريغ (تُحفظ داخل الموقع فقط) -->
+        <div id="releasePage" class="page-section">
+            <div class="card">
+                <h2>مساحة التفريغ الخاصة (تُحفظ داخل الموقع فقط)</h2>
+                <p class="card-subtitle">اكتبي كل الكلام والعتاب الذي ترغبين بقوله هنا. يتم حفظه محلياً داخل جهازك فقط لتقرئيه وتفرغي شحنتك دون أن ترسليه للطرف الآخر.</p>
+                
+                <textarea id="releaseArea" rows="6" placeholder="اكتبي كل ما يدور في خاطرك دون تردد..."></textarea>
+                <button class="btn" onclick="saveReleaseText()">حفظ الكلام داخل المنصة</button>
+
+                <div style="margin-top: 30px;">
+                    <h3>النصوص المفرغة المحفوظة:</h3>
+                    <div id="savedReleaseList" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. صفحة الآيات المتجددة تلقائياً -->
+        <div id="wisdomPage" class="page-section">
+            <div class="card">
+                <h2>آيات وأحاديث متجددة للربط على القلب</h2>
+                <p class="card-subtitle">تتجدد هذه النصوص تلقائياً لمنحك السكينة والهدوء النفسي.</p>
+
+                <div class="text-quote">
+                    <p id="dynamicQuoteText">loading...</p>
+                    <div class="source" id="dynamicQuoteSource"></div>
+                </div>
+
+                <button class="btn" onclick="displayRandomQuote()">عرض نص آخر</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        // الأحاديث والآيات المتنوعة
+        const quotesList = [
+            { text: "«وَعَسَىٰ أَن تَكْرَهُوا شَيْئًا وَهُوَ خَيْرٌ لَّكُمْ ۖ وَعَسَىٰ أَن تُحِبُّوا شَيْئًا وَهُوَ شَرٌّ لَّكُمْ ۗ وَاللَّهُ يَعْلَمُ وَأَنتُمْ لَا تَعْلَمُونَ»", source: "- سورة البقرة (216)" },
+            { text: "«وَاصْبِرْ لِحُكْمِ رَبِّكَ فَإِنَّكَ بِأَعْيُنِنَا»", source: "- سورة الطور (48)" },
+            { text: "«لَّا تَدْرِي لَعَلَّ اللَّهَ يُحْدِثُ بَعْدَ ذَٰلِكَ أَمْرًا»", source: "- سورة الطلاق (1)" },
+            { text: "«إنك لن تدع شيئاً لله عز وجل إلا أبدلك الله به ما هو خير لك منه»", source: "- مسند أحمد" },
+            { text: "«عَجَبًا لأَمْرِ المُؤْمِنِ، إنَّ أمْرَهُ كُلُّهُ خَيْرٌ»", source: "- صحيح مسلم" },
+            { text: "«مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ»", source: "- سورة الضحى (3)" },
+            { text: "التعلق بالأشخاص يرهق الروح لأن البشر متغيرون، أما التعلق بالله فيمنحك الثبات الذي لا يتزعزع.", source: "- تأمل نفسي" }
+        ];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            displayRandomQuote();
+        });
+
+        function nextToLogin() {
+            const user = JSON.parse(localStorage.getItem("fak_user"));
+            if (user) {
+                showMainPlatform();
+            } else {
+                switchPage('loginPage');
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const name = document.getElementById("userName").value.trim();
+            const email = document.getElementById("userEmail").value.trim();
+
+            if (name && email) {
+                const userData = { name, email };
+                localStorage.setItem("fak_user", JSON.stringify(userData));
+                showMainPlatform();
+            }
+        }
+
+        function showMainPlatform() {
+            const user = JSON.parse(localStorage.getItem("fak_user"));
+            document.getElementById("mainNav").style.display = "flex";
+            if (user) document.getElementById("navUser").innerText = `مرحباً، ${user.name}`;
+            
+            loadDashboardData();
+            loadReleaseHistory();
+            switchPage('homePage', document.querySelectorAll('.nav-links a')[0]);
+        }
+
+        function switchPage(pageId, element) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active-page'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+
+            document.getElementById(pageId).classList.add('active-page');
+            if (element) element.classList.add('active');
+        }
+
+        // إرشادات المسارات
+        function changePath() {
+            const val = document.getElementById("pathSelect").value;
+            const inst = document.getElementById("pathInstruction");
+
+            if (val === "detach_present") {
+                inst.innerText = "التعامل مع شخص متواجد يتطلب رسم حدود صارمة، معاملة رسمية جداً، وعدم إظهار أي انفعال أو استجابة سريعة للرسائل.";
+            } else if (val === "detach_absent") {
+                inst.innerText = "المطلوب قطع المتابعة الرقمية بالكامل والتوقف عن البحث عن أخباره لتقليل محفزات التعلق.";
+            } else {
+                inst.innerText = "التركيز الكامل على الذات وبناء أهداف جديدة وإغلاق هذا الفصل تماماً بكل هدوء.";
+            }
+        }
+
+        // العداد
+        function loadDashboardData() {
+            const days = localStorage.getItem("fak_days") || 0;
+            document.getElementById("daysCount").innerText = days;
+        }
+
+        function updateCounter(amount) {
+            let days = parseInt(localStorage.getItem("fak_days") || 0) + amount;
+            if (days < 0) days = 0;
+            localStorage.setItem("fak_days", days);
+            loadDashboardData();
+        }
+
+        function resetCounter() {
+            if (confirm("هل ترغبين في إعادة ضبط العداد؟")) {
+                localStorage.setItem("fak_days", 0);
+                loadDashboardData();
+            }
+        }
+
+        // حفظ التفريغ محلياً بالموقع فقط
+        function saveReleaseText() {
+            const area = document.getElementById("releaseArea");
+            if (!area.value.trim()) return;
+
+            const saved = JSON.parse(localStorage.getItem("fak_releases") || "[]");
+            saved.unshift({
+                id: Date.now(),
+                date: new Date().toLocaleDateString('ar-SA'),
+                text: area.value.trim()
+            });
+
+            localStorage.setItem("fak_releases", JSON.stringify(saved));
+            area.value = "";
+            loadReleaseHistory();
+        }
+
+        function loadReleaseHistory() {
+            const container = document.getElementById("savedReleaseList");
+            const saved = JSON.parse(localStorage.getItem("fak_releases") || "[]");
+
+            container.innerHTML = saved.length === 0 ? "<p style='color: var(--text-muted); font-size: 0.9rem;'>لا توجد نصوص محفوظة بعد.</p>" : "";
+
+            saved.forEach(item => {
+                const div = document.createElement("div");
+                div.className = "text-quote";
+                div.innerHTML = `<div class="source">${item.date}</div><p>${item.text}</p>`;
+                container.appendChild(div);
+            });
+        }
+
+        // آيات وأحاديث متجددة
+        function displayRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotesList.length);
+            const quote = quotesList[randomIndex];
+
+            document.getElementById("welcomeQuoteText").innerText = quote.text;
+            document.getElementById("welcomeQuoteSource").innerText = quote.source;
+
+            document.getElementById("dynamicQuoteText").innerText = quote.text;
+            document.getElementById("dynamicQuoteSource").innerText = quote.source;
+        }
+    </script>
+</body>
+</html>
