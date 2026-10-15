@@ -1,445 +1,970 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة فَك | FAK - نظام الاستقلال العاطفي</title>
-    
-    <style>
-        :root {
-            --bg-dark: #0b0f17;
-            --bg-card: #141c28;
-            --bg-input: #0a0e14;
-            --text-primary: #e2e8f0;
-            --text-muted: #8a99ad;
-            --accent-indigo: #6366f1;
-            --accent-indigo-hover: #4f46e5;
-            --accent-rose: #9f1239;
-            --accent-rose-hover: #be123c;
-            --border-color: #222d3d;
-            --border-radius: 12px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حصن دانه للأدعية والأذكار اليومية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #f5f7f5;
+      --card-bg: #ffffff;
+      --primary: #2d4c3e;
+      --primary-soft: #ebf1ee;
+      --accent-gold: #b89758;
+      --text-main: #1f2d27;
+      --text-sub: #546a5f;
+      --border-color: #e2ebe6;
+      --shadow-subtle: 0 8px 20px rgba(45, 76, 62, 0.06);
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            line-height: 1.8;
-            direction: rtl;
-            padding-bottom: 50px;
-        }
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 2;
+      padding-bottom: 60px;
+    }
 
-        /* Navbar */
-        .navbar {
-            background-color: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
-            padding: 18px 8%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+    /* الشاشة الترحيبية */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(31, 45, 39, 0.75);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
 
-        .brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent-indigo);
-            letter-spacing: 1px;
-        }
+    .modal-card {
+      background: white;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+      border: 1px solid var(--accent-gold);
+    }
 
-        .nav-links {
-            display: none; /* تظهر فقط بعد تسجيل الدخول */
-        }
+    .modal-card h2 {
+      font-family: 'Amiri', serif;
+      color: var(--primary);
+      font-size: 2.2rem;
+      margin-bottom: 15px;
+    }
 
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-right: 20px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
+    .quran-box {
+      background: var(--primary-soft);
+      padding: 22px;
+      border-radius: 14px;
+      margin: 20px 0;
+      border-right: 4px solid var(--accent-gold);
+    }
 
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--text-primary);
-        }
+    .quran-verse {
+      font-family: 'Amiri', serif;
+      font-size: 1.5rem;
+      color: var(--primary);
+      font-weight: bold;
+      margin-bottom: 12px;
+      line-height: 1.8;
+    }
 
-        /* Layout & Pages */
-        .container {
-            max-width: 850px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+    .quran-tafseer {
+      font-size: 1.05rem;
+      color: var(--text-main);
+      text-align: justify;
+      line-height: 1.8;
+    }
 
-        .page-section {
-            display: none;
-        }
+    .modal-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
 
-        .page-section.active-page {
-            display: block;
-        }
+    .modal-btn:hover {
+      background: #1f362c;
+    }
 
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            margin-bottom: 25px;
-        }
+    /* الهيدر والقوائم */
+    header {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 45px 20px 35px;
+      box-shadow: var(--shadow-subtle);
+    }
 
-        .card h2 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: var(--text-primary);
-        }
+    header h1 {
+      font-family: 'Amiri', serif;
+      font-size: 2.6rem;
+      margin-bottom: 8px;
+    }
 
-        .card-subtitle {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-        }
+    header p {
+      font-size: 1.1rem;
+      color: #d2e0d8;
+    }
 
-        /* Reminders Banner */
-        .reminder-banner {
-            background-color: #1a1523;
-            border-right: 4px solid var(--accent-rose);
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            color: #fecdd3;
-            font-size: 0.95rem;
-        }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      max-width: 1050px;
+      margin: -22px auto 30px;
+      padding: 10px;
+      z-index: 10;
+      position: relative;
+    }
 
-        /* Forms & Inputs */
-        input[type="text"], input[type="email"], textarea, select {
-            width: 100%;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 14px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            outline: none;
-            font-size: 0.95rem;
-            transition: border-color 0.3s;
-        }
+    .nav-btn {
+      border: 1px solid var(--border-color);
+      background: white;
+      color: var(--primary);
+      padding: 11px 22px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1.05rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      transition: all 0.3s ease;
+    }
 
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--accent-indigo);
-        }
+    .nav-btn.active, .nav-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
 
-        .btn {
-            background-color: var(--accent-indigo);
-            color: #ffffff;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: background-color 0.3s;
-        }
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
 
-        .btn:hover {
-            background-color: var(--accent-indigo-hover);
-        }
+    .tab-content {
+      display: none;
+    }
 
-        .btn-danger {
-            background-color: var(--accent-rose);
-        }
+    .tab-content.active {
+      display: block;
+    }
 
-        .btn-danger:hover {
-            background-color: var(--accent-rose-hover);
-        }
+    /* البطاقات */
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-subtle);
+      border: 1px solid var(--border-color);
+      border-right: 5px solid var(--accent-gold);
+    }
 
-        /* Quotes Component */
-        .text-quote {
-            border-right: 3px solid var(--accent-indigo);
-            background-color: #0e141f;
-            padding: 25px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            min-height: 120px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+    .card h3 {
+      color: var(--primary);
+      font-size: 1.35rem;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .text-quote p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
+    .card p.dua-text {
+      font-family: 'Amiri', serif;
+      font-size: 1.45rem;
+      color: #121c18;
+      margin-bottom: 16px;
+      text-align: justify;
+      line-height: 2.2;
+    }
 
-        .text-quote .source {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-top: 12px;
-        }
+    .card .benefit {
+      font-size: 0.98rem;
+      color: var(--text-sub);
+      background: var(--primary-soft);
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
 
-        /* Counter */
-        .counter-box {
-            text-align: center;
-            padding: 20px 0;
-        }
+    /* العناوين الفرعية للأقسام المقسمة */
+    .section-header {
+      font-family: 'Amiri', serif;
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin: 30px 0 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--accent-gold);
+    }
 
-        .counter-num {
-            font-size: 4rem;
-            font-weight: 800;
-            color: var(--accent-indigo);
-        }
-    </style>
+    /* الأزرار والعدادات */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .counter-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 25px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .counter-btn:disabled {
+      background: #a3b8ad;
+      cursor: not-allowed;
+    }
+
+    .badge {
+      background: var(--accent-gold);
+      color: white;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: 1px solid #c0d1c7;
+      color: var(--text-sub);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .reset-btn:hover {
+      background: #f0f5f2;
+    }
+
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: #a93226;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+
+    /* النماذج */
+    .dua-form {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--shadow-subtle);
+      border: 1px solid var(--border-color);
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1.05rem;
+      background: #fafcfb;
+    }
+
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: 2px solid var(--primary);
+      background: white;
+    }
+
+    .submit-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 13px 25px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .step-card {
+      background: #faf8f5;
+      border: 1px solid #e8dbbe;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .step-card .step-title {
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="brand">فَك | FAK</div>
-        <div class="nav-links" id="mainNav">
-            <a onclick="switchPage('homePage', this)" class="active">الرئيسية</a>
-            <a onclick="switchPage('releasePage', this)">مساحة التفريغ</a>
-            <a onclick="switchPage('wisdomPage', this)">السكينة والربط على القلب</a>
-            <span id="navUser" style="color: var(--text-muted); font-size: 0.9rem; margin-right: 15px;"></span>
-        </div>
-    </nav>
+  <!-- الشاشة الترحيبية -->
+  <div class="modal-overlay" id="welcomeModal">
+    <div class="modal-card">
+      <h2>مرحباً دانه</h2>
+      <p style="color: var(--text-sub);">رسالة اليوم لتطمئن روحك وقلبك:</p>
+      
+      <div class="quran-box">
+        <div class="quran-verse" id="modalVerse">...</div>
+        <div class="quran-tafseer" id="modalTafseer">...</div>
+      </div>
 
-    <div class="container">
+      <button class="modal-btn" onclick="closeModal()">الدخول إلى الحصن</button>
+    </div>
+  </div>
 
-        <!-- 1. الشاشة الأولى عند الفتح: السكينة والربط على القلب -->
-        <div id="welcomePage" class="page-section active-page">
-            <div class="card" style="text-align: center; padding: 40px 20px;">
-                <h2 style="font-size: 1.6rem; margin-bottom: 20px;">قبل أن تبدأ.. خذ نفساً عميقاً</h2>
-                <div class="text-quote" style="text-align: right;">
-                    <p id="welcomeQuoteText">«وَعَسَىٰ أَن تَكْرَهُوا شَيْئًا وَهُوَ خَيْرٌ لَّكُمْ ۖ وَعَسَىٰ أَن تُحِبُّوا شَيْئًا وَهُوَ شَرٌّ لَّكُمْ ۗ وَاللَّهُ يَعْلَمُ وَأَنتُمْ لَا تَعْلَمُونَ»</p>
-                    <div class="source" id="welcomeQuoteSource">- سورة البقرة (216)</div>
-                </div>
-                <button class="btn" onclick="nextToLogin()" style="margin-top: 15px; width: 100%; max-width: 300px;">المتابعة إلى المنصة</button>
-            </div>
-        </div>
+  <header>
+    <h1>حصن دانه للأدعية والأذكار</h1>
+    <p>ألا بذكر الله تطمئن القلوب</p>
+  </header>
 
-        <!-- 2. صفحة تسجيل الدخول -->
-        <div id="loginPage" class="page-section">
-            <div class="card" style="max-width: 500px; margin: 20px auto;">
-                <h2>تسجيل الدخول / إنشاء حساب</h2>
-                <p class="card-subtitle">أدخل اسمك لحفظ تقدمك ومسارك الخاص بشكل آمن.</p>
-                
-                <form onsubmit="handleLogin(event)">
-                    <input type="text" id="userName" placeholder="الاسم أو الاسم المستعار" required>
-                    <input type="email" id="userEmail" placeholder="البريد الإلكتروني" required>
-                    <button type="submit" class="btn" style="width: 100%;">دخول</button>
-                </form>
-            </div>
-        </div>
+  <nav>
+    <button class="nav-btn active" onclick="openTab('sabah')">أذكار الصباح</button>
+    <button class="nav-btn" onclick="openTab('masaa')">أذكار المساء</button>
+    <button class="nav-btn" onclick="openTab('fard')">أذكار الصلوات الخمس</button>
+    <button class="nav-btn" onclick="openTab('nafl')">الضحى والنوافل والقيام</button>
+    <button class="nav-btn" onclick="openTab('ibrahimiya')">الصلاة الإبراهيمية والدعاء</button>
+    <button class="nav-btn" onclick="openTab('custom')">أدعيتي الخاصة</button>
+  </nav>
 
-        <!-- 3. الصفحة الرئيسية لوحة التحكم والمسارات -->
-        <div id="homePage" class="page-section">
-            
-            <!-- تنبيهات وحصن سلوكي -->
-            <div class="reminder-banner">
-                <strong>تذكير مهم اليوم:</strong> تذكري ألا تراسلي، ولا تردي فوراً، واستعيدي التحكم بزمام ردود أفعالك.
-            </div>
+  <div class="container">
 
-            <!-- تحديد المسار -->
-            <div class="card">
-                <h2>حدد مسارك الحالي</h2>
-                <p class="card-subtitle">اختر الوضع الذي يناسب حالتك الراهنة لضبط إرشاداتك:</p>
-                <select id="pathSelect" onchange="changePath()">
-                    <option value="detach_present">فك تعلق (الشخص ما زال متواجداً في حياتك/العمل/الدراسة)</option>
-                    <option value="detach_absent">فك تعلق (الشخص غير متواجد)</option>
-                    <option value="move_on">تخطي وتجاوز العلاقة بالكامل</option>
-                </select>
-                <div id="pathInstruction" style="background: #0d131d; padding: 15px; border-radius: 8px; color: var(--text-muted); font-size: 0.9rem; margin-top: 10px;">
-                    التعامل مع شخص متواجد يتطلب رسم حدود صارمة وعدم إظهار أي انفعال أو استجابة سريعة.
-                </div>
-            </div>
+    <!-- أذكار الصباح -->
+    <div id="sabah" class="tab-content active">
+      <div class="card">
+        <h3>آية الكرسي</h3>
+        <p class="dua-text">[cite: 27] أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ: {اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ}.</p>
+        <div class="benefit">[cite: 27] من قالها حين يصبح أُجير من الجن حتى يمسي.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button><button class="reset-btn" onclick="reset(this, 1)">إعادة</button></div>
+      </div>
 
-            <!-- العداد -->
-            <div class="card">
-                <h2>عداد التوازن والاستقلال</h2>
-                <p class="card-subtitle">رصد الأيام الملتزمة فيها بضبط الانفعال وعدم المبادرة والتواصل.</p>
-                <div class="counter-box">
-                    <div class="counter-num" id="daysCount">0</div>
-                    <p style="color: var(--text-muted);">أيام الاستقرار والالتزام</p>
-                </div>
-                <div style="text-align: center; margin-top: 15px;">
-                    <button class="btn" onclick="updateCounter(1)">تسجيل يوم جديد</button>
-                    <button class="btn btn-danger" onclick="resetCounter()">إعادة الضبط</button>
-                </div>
-            </div>
-        </div>
+      <div class="card">
+        <h3>سورة الإخلاص</h3>
+        <p class="dua-text">[cite: 28] بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ {قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ}.</p>
+        <div class="benefit">[cite: 28] من قالها حين يصبح وحين يمسي كفته من كل شيء.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
 
-        <!-- 4. صفحة التفريغ (تُحفظ داخل الموقع فقط) -->
-        <div id="releasePage" class="page-section">
-            <div class="card">
-                <h2>مساحة التفريغ الخاصة (تُحفظ داخل الموقع فقط)</h2>
-                <p class="card-subtitle">اكتبي كل الكلام والعتاب الذي ترغبين بقوله هنا. يتم حفظه محلياً داخل جهازك فقط لتقرئيه وتفرغي شحنتك دون أن ترسليه للطرف الآخر.</p>
-                
-                <textarea id="releaseArea" rows="6" placeholder="اكتبي كل ما يدور في خاطرك دون تردد..."></textarea>
-                <button class="btn" onclick="saveReleaseText()">حفظ الكلام داخل المنصة</button>
+      <div class="card">
+        <h3>سورة الفلق</h3>
+        <p class="dua-text">[cite: 28] بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ {قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۝ مِن شَرِّ مَا خَلَقَ ۝ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ۝ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۝ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ}.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
 
-                <div style="margin-top: 30px;">
-                    <h3>النصوص المفرغة المحفوظة:</h3>
-                    <div id="savedReleaseList" style="margin-top: 15px;"></div>
-                </div>
-            </div>
-        </div>
+      <div class="card">
+        <h3>سورة الناس</h3>
+        <p class="dua-text">[cite: 29] بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ {قُلْ أَعُوذُ بِرَبِّ النَّاسِ ۝ مَلِكِ النَّاسِ ۝ إِلَٰهِ النَّاسِ ۝ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۝ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۝ مِنَ الْجِنَّةِ وَالنَّاسِ}.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
 
-        <!-- 5. صفحة الآيات المتجددة تلقائياً -->
-        <div id="wisdomPage" class="page-section">
-            <div class="card">
-                <h2>آيات وأحاديث متجددة للربط على القلب</h2>
-                <p class="card-subtitle">تتجدد هذه النصوص تلقائياً لمنحك السكينة والهدوء النفسي.</p>
+      <div class="card">
+        <h3>دعاء الصباح</h3>
+        <p class="dua-text">[cite: 29] أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
 
-                <div class="text-quote">
-                    <p id="dynamicQuoteText">loading...</p>
-                    <div class="source" id="dynamicQuoteSource"></div>
-                </div>
+      <div class="card">
+        <h3>سيد الاستغفار</h3>
+        <p class="dua-text">[cite: 30] اللَّهُمَّ أَنْتَ رَبِّي لاَ إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَمَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ.</p>
+        <div class="benefit">[cite: 30] من قالها موقناً بها دخل الجنة.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
 
-                <button class="btn" onclick="displayRandomQuote()">عرض نص آخر</button>
-            </div>
-        </div>
+      <div class="card">
+        <h3>رضيت بالله رباً</h3>
+        <p class="dua-text">[cite: 30, 31] رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالإِسْلاَمِ دِينَاً، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيَّاً.</p>
+        <div class="benefit">[cite: 31] كان حقاً على الله أن يرضيه يوم القيامة.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
 
+      <div class="card">
+        <h3>إشهاد الله وحملة عرشه</h3>
+        <p class="dua-text">[cite: 31] اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لاَ إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ.</p>
+        <div class="benefit">[cite: 31] من قالها أعتقه الله من النار.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 4)">تكرار <span class="badge">4</span></button><button class="reset-btn" onclick="reset(this, 4)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>شكر النعمة</h3>
+        <p class="dua-text">[cite: 32] اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لاَ شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ.</p>
+        <div class="benefit">[cite: 32] من قالها أدى شكر يومه.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>حسبي الله</h3>
+        <p class="dua-text">[cite: 32] حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ.</p>
+        <div class="benefit">[cite: 32] كفاه الله ما أهمه من أمر الدنيا والآخرة.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 7)">تكرار <span class="badge">7</span></button><button class="reset-btn" onclick="reset(this, 7)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>الحماية والسلامة</h3>
+        <p class="dua-text">[cite: 33] بِسْمِ اللَّهِ الَّذِي لاَ يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَلاَ فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ.</p>
+        <div class="benefit">[cite: 33] لم يضره من الله شيء.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>اللهم بك أصبحنا</h3>
+        <p class="dua-text">[cite: 33] اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>فطرة الإسلام</h3>
+        <p class="dua-text">[cite: 33, 34] أَصْبَحْنَا عَلَى فِطْرَةِ الإِسْلاَمِ، وَعَلَى كَلِمَةِ الإِخْلاَصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفاً مُسْلِماً وَمَا كَانَ مِنَ الْمُشْرِكِينَ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>سبحان الله وبحمده عدد خلقه</h3>
+        <p class="dua-text">[cite: 34] سُبْحَانَ اللَّهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>عافية البدن والسمع والبصر</h3>
+        <p class="dua-text">[cite: 34, 35] اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>الاستعاذة من الكفر والفقر</h3>
+        <p class="dua-text">[cite: 35] اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>سؤال العفو والعافية</h3>
+        <p class="dua-text">[cite: 36] اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>يا حي يا قيوم</h3>
+        <p class="dua-text">[cite: 19, 36] يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ أَصْلِحْ لِي شَأْنِي كُلَّهُ وَلاَ تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>أصبحنا وأصبح الملك لله رب العالمين</h3>
+        <p class="dua-text">[cite: 19, 40] أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ رَبِّ الْعَالَمِينَ، اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذَا الْيَوْمِ: فَتْحَهُ، وَنَصْرَهُ، وَنُورَهُ، وَبَرَكَتَهُ، وَهُدَاهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِيهِ وَشَرِّ مَا بَعْدَهُ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>عالم الغيب والشهادة</h3>
+        <p class="dua-text">[cite: 20, 40] اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَالأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءاً أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>أعوذ بكلمات الله التامات</h3>
+        <p class="dua-text">[cite: 20, 41] أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>الصلاة على النبي ﷺ</h3>
+        <p class="dua-text">[cite: 21, 41] اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ.</p>
+        <div class="benefit">[cite: 21, 41] من صلى عليّ حين يصبح وحين يمسي أدركته شفاعتي يوم القيامة.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 10)">تكرار <span class="badge">10</span></button><button class="reset-btn" onclick="reset(this, 10)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>الاستعاذة من الشرك</h3>
+        <p class="dua-text">[cite: 21, 41] اللَّهُمَّ إِنَّا نَعُوذُ بِكَ مِنْ أَنْ نُشْرِكَ بِكَ شَيْئاً نَعْلَمُهُ، وَنَسْتَغْفِرُكَ لِمَا لاَ نَعْلَمُهُ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>الاستعاذة من الهم والحزن</h3>
+        <p class="dua-text">[cite: 22, 42] اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ، وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>سيد الاستغفار القصير</h3>
+        <p class="dua-text">[cite: 22, 42] أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ الَّذِي لاَ إِلَهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>الذّكْر لجمال وجه الله وسلطانه</h3>
+        <p class="dua-text">[cite: 26, 42] يَا رَبِّ لَكَ الْحَمْدُ كَمَا يَنْبَغِي لِجَلاَلِ وَجْهِكَ وَلِعَظِيمِ سُلْطَانِكَ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>التوحيد للمائة</h3>
+        <p class="dua-text">[cite: 26, 37] لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.</p>
+        <div class="benefit">[cite: 26, 37] كانت له عدل عشر رقاب، وكتبت له مائة حسنة، ومحيت عنه مائة سيئة.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 100)">تكرار <span class="badge">100</span></button><button class="reset-btn" onclick="reset(this, 100)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>سبحان الله وبحمده للمائة</h3>
+        <p class="dua-text">[cite: 24, 37, 39] سُبْحَانَ اللَّهِ وَبِحَمْدِهِ.</p>
+        <div class="benefit">[cite: 24, 37, 39] حُطَّتْ خَطَايَاهُ وَإِنْ كَانَتْ مِثْلَ زَبَدِ الْبَحْرِ.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 100)">تكرار <span class="badge">100</span></button><button class="reset-btn" onclick="reset(this, 100)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>أستغفر الله وأتوب إليه للمائة</h3>
+        <p class="dua-text">[cite: 39] أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ.</p>
+        <div class="benefit">[cite: 39] مائة حسنة، ومحيت عنه مائة سيئة، وكان حرزاً من الشيطان حتى يمسي.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 100)">تكرار <span class="badge">100</span></button><button class="reset-btn" onclick="reset(this, 100)">إعادة</button></div>
+      </div>
     </div>
 
-    <!-- Script Logic -->
-    <script>
-        // الأحاديث والآيات المتنوعة
-        const quotesList = [
-            { text: "«وَعَسَىٰ أَن تَكْرَهُوا شَيْئًا وَهُوَ خَيْرٌ لَّكُمْ ۖ وَعَسَىٰ أَن تُحِبُّوا شَيْئًا وَهُوَ شَرٌّ لَّكُمْ ۗ وَاللَّهُ يَعْلَمُ وَأَنتُمْ لَا تَعْلَمُونَ»", source: "- سورة البقرة (216)" },
-            { text: "«وَاصْبِرْ لِحُكْمِ رَبِّكَ فَإِنَّكَ بِأَعْيُنِنَا»", source: "- سورة الطور (48)" },
-            { text: "«لَّا تَدْرِي لَعَلَّ اللَّهَ يُحْدِثُ بَعْدَ ذَٰلِكَ أَمْرًا»", source: "- سورة الطلاق (1)" },
-            { text: "«إنك لن تدع شيئاً لله عز وجل إلا أبدلك الله به ما هو خير لك منه»", source: "- مسند أحمد" },
-            { text: "«عَجَبًا لأَمْرِ المُؤْمِنِ، إنَّ أمْرَهُ كُلُّهُ خَيْرٌ»", source: "- صحيح مسلم" },
-            { text: "«مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ»", source: "- سورة الضحى (3)" },
-            { text: "التعلق بالأشخاص يرهق الروح لأن البشر متغيرون، أما التعلق بالله فيمنحك الثبات الذي لا يتزعزع.", source: "- تأمل نفسي" }
-        ];
+    <!-- أذكار المساء -->
+    <div id="masaa" class="tab-content">
+      <div class="card">
+        <h3>آية الكرسي</h3>
+        <p class="dua-text">[cite: 12] أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ: {اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ}.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
 
-        document.addEventListener("DOMContentLoaded", () => {
-            displayRandomQuote();
-        });
+      <div class="card">
+        <h3>أواخر سورة البقرة بالكامل</h3>
+        <p class="dua-text">[cite: 15] أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ: {آمَنَ الرَّسُولُ بِمَا أُنزِلَ إِلَيْهِ مِن رَّبِّهِ وَالْمُؤْمِنُونَ ۚ كُلٌّ آمَنَ بِاللَّهِ وَمَلَائِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ لَا نُفَرِّقُ بَيْنَ أَحَدٍ مِّن رُسُلِهِ ۚ وَقَالُوا سَمِعْنَا وَأَطَعْنَا ۖ غُفْرَانَكَ رَبَّنَا وَإِلَيْكَ الْمَصِيرُ ۝ لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا ۚ لَهَا مَا كَسَبَتْ وَعَلَيْهَا مَا اكْتَسَبَتْ ۗ رَبَّنَا لَا تُؤَاخِذْنَا إِن نَّسِينَا أَوْ أَخْطَأْنَا ۚ رَبَّنَا وَلَا تَحْمِلْ عَلَيْنَا إِصْرًا كَمَا حَمَلْتَهُ عَلَى الَّذِينَ مِن قَبْلِنَا ۚ رَبَّنَا وَلَا تُحَمِّلْنَا مَا لَا طَاقَةَ لَنَا بِهِ ۖ وَاعْفُ عَنَّا وَاغْفِرْ لَنَا وَارْحَمْنَا ۚ أَنتَ مَوْلَانَا فَانصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ}.</p>
+        <div class="benefit">[cite: 15] من قرأهما في ليلة كفتاه.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
 
-        function nextToLogin() {
-            const user = JSON.parse(localStorage.getItem("fak_user"));
-            if (user) {
-                showMainPlatform();
-            } else {
-                switchPage('loginPage');
-            }
+      <div class="card">
+        <h3>المعوذات (الإخلاص، الفلق، والناس)</h3>
+        <p class="dua-text">[cite: 10, 16] قراءة سورة الإخلاص، الفلق، والناس بالكامل (3 مرات لكل سورة).</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>أمسينا وأمسى الملك لله</h3>
+        <p class="dua-text">[cite: 10] أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ، لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>سيد الاستغفار</h3>
+        <p class="dua-text">[cite: 11] اللَّهُمَّ أَنْتَ رَبِّي لاَ إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَمَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ.</p>
+        <div class="benefit">[cite: 11] من قالها موقناً بها ومات دخل الجنة.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>اللهم بك أمسينا</h3>
+        <p class="dua-text">[cite: 9, 18] اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>أمسينا على فطرة الإسلام</h3>
+        <p class="dua-text">[cite: 18] أَمْسَيْنَا عَلَى فِطْرَةِ الإِسْلاَمِ، وَعَلَى كَلِمَةِ الإِخْلاَصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفاً مُسْلِماً وَمَا كَانَ مِنَ الْمُشْرِكِينَ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>اللهم إني أمسيت أُشهدك</h3>
+        <p class="dua-text">[cite: 14] اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلاَئِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لاَ إِلَهَ إِلاَّ أَنْتَ وَحْدَكَ لاَ شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ.</p>
+        <div class="benefit">[cite: 14] من قالها أعتقه الله من النار.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 4)">تكرار <span class="badge">4</span></button><button class="reset-btn" onclick="reset(this, 4)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>شكر النعمة بالمساء</h3>
+        <p class="dua-text">[cite: 14] اللَّهُمَّ مَا أَمْسَى بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لاَ شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ.</p>
+        <div class="benefit">[cite: 14] من قالها حين يمسي أدى شكر يومه.</div>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+    </div>
+
+    <!-- أذكار الصلوات الخمس -->
+    <div id="fard" class="tab-content">
+      <div class="card">
+        <h3>الاستغفار والسلام بعد الصلاة</h3>
+        <p class="dua-text">[cite: 3] أَسْتَغْفِرُ اللَّهَ، أَسْتَغْفِرُ اللَّهَ، أَسْتَغْفِرُ اللَّهَ. اللَّهُمَّ أَنْتَ السَّلاَمُ وَمِنْكَ السَّلاَمُ، تَبَارَكْتَ يَا ذَا الْجَلاَلِ وَالإِكْرَامِ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>التهليل بعد الصلاة (الأول)</h3>
+        <p class="dua-text">[cite: 3] لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، اللَّهُمَّ لاَ مَانِعَ لِمَا أَعْطَيْتَ، وَلاَ مُعْطِيَ لِمَا مَنَعْتَ، وَلاَ يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>التهليل بعد الصلاة (الثاني)</h3>
+        <p class="dua-text">[cite: 4] لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، لاَ حَوْلَ وَلاَ قُوَّةَ إِلاَّ بِاللَّهِ، لاَ إِلَهَ إِلاَّ اللَّهُ، وَلاَ نَعْبُدُ إِلاَّ إِيَّاهُ، لَهُ النِّعْمَةُ وَلَهُ الْفَضْلُ وَلَهُ الثَّنَاءُ الْحَسَنُ، لاَ إِلَهَ إِلاَّ اللَّهُ مُخْلِصِينَ لَهُ الدِّينَ وَلَوْ كَرِهَ الْكَافِرُونَ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>التسبيح والتحميد والتكبير</h3>
+        <p class="dua-text">[cite: 4] سُبْحَانَ اللَّهِ (33 مرة)، وَالْحَمْدُ لِلَّهِ (33 مرة)، وَاللَّهُ أَكْبَرُ (33 مرة)، ثم تمام المائة: لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ[cite: 5].</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 33)">سبحان الله <span class="badge">33</span></button><button class="counter-btn" onclick="dec(this, 33)">الحمد لله <span class="badge">33</span></button><button class="counter-btn" onclick="dec(this, 33)">الله أكبر <span class="badge">33</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>المعوذات وآية الكرسي كاملة</h3>
+        <p class="dua-text">[cite: 5, 6, 7] قراءة سورة الإخلاص، الفلق، والناس بالكامل، وآية الكرسي بالكامل[cite: 7]. (تُقرأ المعوذات 3 مرات بعد صلاتي الفجر والمغرب، ومرة واحدة بعد الظهر والعصر والعشاء)[cite: 6].</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>الذكر الخاص بعد صلاتي المغرب والصبح</h3>
+        <p class="dua-text">[cite: 7] لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 10)">تكرار <span class="badge">10</span></button><button class="reset-btn" onclick="reset(this, 10)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>الدعاء الخاص بعد صلاة الفجر</h3>
+        <p class="dua-text">[cite: 8] اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْماً نَافِعاً، وَرِزْقاً طَيِّباً، وَعَمَلاً مُتَقَبَّلاً.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+
+      <div class="card">
+        <h3>طلب الأجر من النار بعد الصبح والمغرب</h3>
+        <p class="dua-text">[cite: 8] اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 7)">تكرار <span class="badge">7</span></button><button class="reset-btn" onclick="reset(this, 7)">إعادة</button></div>
+      </div>
+
+      <div class="card">
+        <h3>دعاء الإعانة على الشكر والعبادة</h3>
+        <p class="dua-text">[cite: 8] اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ.</p>
+        <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+      </div>
+    </div>
+
+    <!-- صلوات النوافل مقسمة -->
+    <div id="nafl" class="tab-content">
+      <!-- نموذج إضافة دعاء للنوافل -->
+      <div class="dua-form">
+        <h3 style="color:var(--primary); margin-bottom:15px;">إضافة دعاء مخصص للنوافل</h3>
+        <form id="addNaflForm" onsubmit="saveNaflDua(event)">
+          <div class="form-group">
+            <label>اختر القسم:</label>
+            <select id="naflCategory" required>
+              <option value="duha">صلاة الضحى</option>
+              <option value="qiyam">قيام الليل والوتر</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>عنوان الذكر / الدعاء:</label>
+            <input type="text" id="naflTitle" placeholder="مثال: دعاء تيسير الأمور" required>
+          </div>
+          <div class="form-group">
+            <label>نص الدعاء:</label>
+            <textarea id="naflText" rows="3" placeholder="اكتبي الدعاء هنا..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label>عدد التكرار المطلوب:</label>
+            <input type="number" id="naflCount" value="1" min="1" required>
+          </div>
+          <button type="submit" class="submit-btn">حفظ الدعاء في القسم المحدد</button>
+        </form>
+      </div>
+
+      <!-- قسم صلاة الضحى -->
+      <div class="section-header">أولاً: أذكار وأدعية صلاة الضحى</div>
+      <div id="duhaStaticDuas">
+        <div class="card">
+          <h3>صلاة الضحى - دعاء قبل التسليم (دعاء المكروب)</h3>
+          <p class="dua-text">اللَّهُمَّ رَحْمَتَكَ أَرْجُو فَلاَ تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ وَأَصْلِحْ لِي شَأْنِي كُلَّهُ لاَ إِلَهَ إِلاَّ أَنْتَ.</p>
+          <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+        </div>
+
+        <div class="card">
+          <h3>دعاء بعد صلاة الضحى</h3>
+          <p class="dua-text">[cite: 2] اللَّهُمَّ إِنَّ الضُّحَى ضُحَاؤُكَ، وَالْبَهَاءَ بَهَاؤُكَ، وَالْجَمَالَ جَمَالُكَ، وَالْقُوَّةَ قُوَّتُكَ، وَلاَ حَوْلَ وَلاَ قُوَّةَ إِلاَّ بِكَ. اللَّهُمَّ إِنْ كَانَ رِزْقِي فِي السَّمَاءِ فَأَنْزِلْهُ، وَإِنْ كَانَ فِي الأَرْضِ فَأَخْرِجْهُ، وَإِنْ كَانَ بَعِيداً فَقَرِّبْهُ، وَإِنْ كَانَ عَسِيراً فَيَسِّرْهُ، وَإِنْ كَانَ قَلِيلاً فَكَثِّرْهُ، وَإِنْ كَانَ كَثِيراً فَبَارِكْ لَنَا فِيهِ، بِحَقِّ بَهَائِكَ وَضُحَائِكَ وَجَمَالِكَ.</p>
+          <div class="controls"><button class="counter-btn" onclick="dec(this, 1)">تكرار <span class="badge">1</span></button></div>
+        </div>
+      </div>
+      <div id="duhaDynamicDuas"></div>
+
+      <!-- قسم قيام الليل والوتر -->
+      <div class="section-header">ثانياً: أذكار وأدعية قيام الليل والوتر</div>
+      <div id="qiyamStaticDuas">
+        <div class="card">
+          <h3>أذكار بعد صلاة الوتر والقيام</h3>
+          <p class="dua-text">سُبُّوحٌ قُدُّوسٌ رَبُّ الْمَلاَئِكَةِ وَالرُّوحِ (ثلاث مرات، ويرفع صوته بالثالثة).</p>
+          <div class="controls"><button class="counter-btn" onclick="dec(this, 3)">تكرار <span class="badge">3</span></button><button class="reset-btn" onclick="reset(this, 3)">إعادة</button></div>
+        </div>
+      </div>
+      <div id="qiyamDynamicDuas"></div>
+    </div>
+
+    <!-- الصلاة الإبراهيمية والدعاء -->
+    <div id="ibrahimiya" class="tab-content">
+      <div class="card">
+        <h3>طريقة الصلاة الإبراهيمية والدعاء المستجاب</h3>
+        
+        <div class="step-card">
+          <div class="step-title">1. بداية الدعاء:</div>
+          <p class="dua-text" style="font-size:1.25rem;">[cite: 1] بسم الله الرحمن الرحيم والحمد لله حمداً كثيراً طيباً مباركاً فيه كما يحب ربنا ويرضى، الحمد لله الذي هدانا وما كنا لنهتدي لولا أن هدانا الله.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-title">2. الصلاة الإبراهيمية:</div>
+          <p class="dua-text" style="font-size:1.25rem;">[cite: 1] اللهم صل على محمد وعلى آل محمد كما صليت على إبراهيم وعلى آل إبراهيم إنك حميد مجيد، وبارك على محمد وعلى آل محمد كما باركت على إبراهيم وعلى آل إبراهيم إنك حميد مجيد.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-title">3. الثناء والاعتراف بالتوحيد:</div>
+          <p class="dua-text" style="font-size:1.25rem;">[cite: 1] اللهم إني أسألك بأني أشهد أنك أنت الله لا إله إلا أنت الأحد الصمد الذي لم يلد ولم يولد ولم يكن له كفواً أحد.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-title">4. التسبيح والذكر:</div>
+          <p>[cite: 1] سبحان الله (10 مرات) | الحمد لله (10 مرات) | الله أكبر (10 مرات)</p>
+          <div class="controls" style="margin-top:12px;">
+            <button class="counter-btn" onclick="dec(this, 10)">سبحان الله <span class="badge">10</span></button>
+            <button class="counter-btn" onclick="dec(this, 10)">الحمد لله <span class="badge">10</span></button>
+            <button class="counter-btn" onclick="dec(this, 10)">الله أكبر <span class="badge">10</span></button>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-title">5. الطلب والرجاء:</div>
+          <p>[cite: 1] اطلبي من الله تعالى أي شيء في خاطرك ويقينك تام بالاستجابة ولو كان مستحيلاً.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- أدعيتي الخاصة -->
+    <div id="custom" class="tab-content">
+      <div class="dua-form">
+        <h3 style="color:var(--primary); margin-bottom:15px;">إضافة دعاء جديد لكِ يا دانه</h3>
+        <form id="addDuaForm" onsubmit="saveCustomDua(event)">
+          <div class="form-group">
+            <label>عنوان الدعاء / الذكر:</label>
+            <input type="text" id="duaTitle" placeholder="مثال: دعاء التوفيق والقبول" required>
+          </div>
+          <div class="form-group">
+            <label>نص الدعاء:</label>
+            <textarea id="duaText" rows="3" placeholder="اكتبي دعاءك هنا..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label>عدد التكرار المطلوب:</label>
+            <input type="number" id="duaCount" value="1" min="1" required>
+          </div>
+          <button type="submit" class="submit-btn">حفظ الدعاء تلقائياً</button>
+        </form>
+      </div>
+
+      <div id="customDuasContainer"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const quranVerses = [
+      {
+        verse: "وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ",
+        tafseer: "وعد رباني صادق ومباشر: الله سبحانه قريب منكِ، يسمع ندائكِ في كل وقت، وما ألمهمكِ الدعاء إلا وهو يريد أن يعطيكِ ويجيب رجاءكِ."
+      },
+      {
+        verse: "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ",
+        tafseer: "ذكر الله هو السكن والأمان الحقيقي لقلبكِ؛ كلما زادت عليكِ مشاغل الحياة، أفرغي قلبكِ في رحاب الأذكار لتجدي الطمأنينة والانشراح."
+      },
+      {
+        verse: "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا * إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+        tafseer: "تأكيد رباني مكرر بأن العسر محاط باليسر من كل جانب، ولا يمكن لعسر واحد أن يغلب يسرين؛ اطمئني وتفاءلي بالخير دائماً."
+      },
+      {
+        verse: "وَاصْبِرْ لِحُكْمِ رَبِّكَ فَإِنَّكَ بِأَعْيُنِنَا",
+        tafseer: "ما أجمل هذا الشعور! أن تكوني بعين الله وحفظه ورعايته الدائمة، لا يغفل عنكِ ولا ينسى دعاءكِ وخاطركِ."
+      },
+      {
+        verse: "وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ",
+        tafseer: "عطاء الله ليس مجرد إجابة، بل عطاء يصل بكِ إلى مرحلة الرضا التام والبهجة الشديدة التي تُنسيكِ مرارة الانتظار."
+      }
+    ];
+
+    window.onload = function() {
+      const randomIndex = Math.floor(Math.random() * quranVerses.length);
+      const selected = quranVerses[randomIndex];
+      document.getElementById('modalVerse').textContent = selected.verse;
+      document.getElementById('modalTafseer').textContent = selected.tafseer;
+
+      loadCustomDuas();
+      loadNaflDuas();
+    };
+
+    function closeModal() {
+      document.getElementById('welcomeModal').style.display = 'none';
+    }
+
+    function openTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    function dec(button, initial) {
+      let badge = button.querySelector('.badge');
+      let current = parseInt(badge.textContent);
+      
+      if (current > 1) {
+        badge.textContent = current - 1;
+      } else {
+        badge.textContent = 0;
+        button.disabled = true;
+      }
+    }
+
+    function reset(button, count) {
+      let card = button.closest('.card');
+      let counterBtns = card.querySelectorAll('.counter-btn');
+      counterBtns.forEach(btn => {
+        let badge = btn.querySelector('.badge');
+        badge.textContent = count;
+        btn.disabled = false;
+      });
+    }
+
+    /* إدارة الأدعية الخاصة العامة */
+    function saveCustomDua(e) {
+      e.preventDefault();
+      const title = document.getElementById('duaTitle').value;
+      const text = document.getElementById('duaText').value;
+      const count = document.getElementById('duaCount').value;
+
+      const newDua = { id: Date.now(), title, text, count };
+      
+      let savedDuas = JSON.parse(localStorage.getItem('daneh_duas') || '[]');
+      savedDuas.unshift(newDua);
+      localStorage.setItem('daneh_duas', JSON.stringify(savedDuas));
+
+      document.getElementById('addDuaForm').reset();
+      loadCustomDuas();
+    }
+
+    function loadCustomDuas() {
+      const container = document.getElementById('customDuasContainer');
+      container.innerHTML = '';
+      let savedDuas = JSON.parse(localStorage.getItem('daneh_duas') || '[]');
+
+      savedDuas.forEach(dua => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>${dua.title} <button class="delete-btn" onclick="deleteDua(${dua.id})">حذف الدعاء</button></h3>
+          <p class="dua-text">${dua.text}</p>
+          <div class="controls">
+            <button class="counter-btn" onclick="dec(this, ${dua.count})">تكرار <span class="badge">${dua.count}</span></button>
+            <button class="reset-btn" onclick="reset(this, ${dua.count})">إعادة</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function deleteDua(id) {
+      let savedDuas = JSON.parse(localStorage.getItem('daneh_duas') || '[]');
+      savedDuas = savedDuas.filter(d => d.id !== id);
+      localStorage.setItem('daneh_duas', JSON.stringify(savedDuas));
+      loadCustomDuas();
+    }
+
+    /* إدارة أدعية النوافل (الضحى والقيام) */
+    function saveNaflDua(e) {
+      e.preventDefault();
+      const category = document.getElementById('naflCategory').value;
+      const title = document.getElementById('naflTitle').value;
+      const text = document.getElementById('naflText').value;
+      const count = document.getElementById('naflCount').value;
+
+      const newDua = { id: Date.now(), category, title, text, count };
+
+      let savedNafl = JSON.parse(localStorage.getItem('daneh_nafl_duas') || '[]');
+      savedNafl.unshift(newDua);
+      localStorage.setItem('daneh_nafl_duas', JSON.stringify(savedNafl));
+
+      document.getElementById('addNaflForm').reset();
+      loadNaflDuas();
+    }
+
+    function loadNaflDuas() {
+      const duhaContainer = document.getElementById('duhaDynamicDuas');
+      const qiyamContainer = document.getElementById('qiyamDynamicDuas');
+      
+      duhaContainer.innerHTML = '';
+      qiyamContainer.innerHTML = '';
+
+      let savedNafl = JSON.parse(localStorage.getItem('daneh_nafl_duas') || '[]');
+
+      savedNafl.forEach(dua => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>${dua.title} <button class="delete-btn" onclick="deleteNaflDua(${dua.id})">حذف الدعاء</button></h3>
+          <p class="dua-text">${dua.text}</p>
+          <div class="controls">
+            <button class="counter-btn" onclick="dec(this, ${dua.count})">تكرار <span class="badge">${dua.count}</span></button>
+            <button class="reset-btn" onclick="reset(this, ${dua.count})">إعادة</button>
+          </div>
+        `;
+
+        if (dua.category === 'duha') {
+          duhaContainer.appendChild(card);
+        } else {
+          qiyamContainer.appendChild(card);
         }
+      });
+    }
 
-        function handleLogin(event) {
-            event.preventDefault();
-            const name = document.getElementById("userName").value.trim();
-            const email = document.getElementById("userEmail").value.trim();
-
-            if (name && email) {
-                const userData = { name, email };
-                localStorage.setItem("fak_user", JSON.stringify(userData));
-                showMainPlatform();
-            }
-        }
-
-        function showMainPlatform() {
-            const user = JSON.parse(localStorage.getItem("fak_user"));
-            document.getElementById("mainNav").style.display = "flex";
-            if (user) document.getElementById("navUser").innerText = `مرحباً، ${user.name}`;
-            
-            loadDashboardData();
-            loadReleaseHistory();
-            switchPage('homePage', document.querySelectorAll('.nav-links a')[0]);
-        }
-
-        function switchPage(pageId, element) {
-            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active-page'));
-            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
-
-            document.getElementById(pageId).classList.add('active-page');
-            if (element) element.classList.add('active');
-        }
-
-        // إرشادات المسارات
-        function changePath() {
-            const val = document.getElementById("pathSelect").value;
-            const inst = document.getElementById("pathInstruction");
-
-            if (val === "detach_present") {
-                inst.innerText = "التعامل مع شخص متواجد يتطلب رسم حدود صارمة، معاملة رسمية جداً، وعدم إظهار أي انفعال أو استجابة سريعة للرسائل.";
-            } else if (val === "detach_absent") {
-                inst.innerText = "المطلوب قطع المتابعة الرقمية بالكامل والتوقف عن البحث عن أخباره لتقليل محفزات التعلق.";
-            } else {
-                inst.innerText = "التركيز الكامل على الذات وبناء أهداف جديدة وإغلاق هذا الفصل تماماً بكل هدوء.";
-            }
-        }
-
-        // العداد
-        function loadDashboardData() {
-            const days = localStorage.getItem("fak_days") || 0;
-            document.getElementById("daysCount").innerText = days;
-        }
-
-        function updateCounter(amount) {
-            let days = parseInt(localStorage.getItem("fak_days") || 0) + amount;
-            if (days < 0) days = 0;
-            localStorage.setItem("fak_days", days);
-            loadDashboardData();
-        }
-
-        function resetCounter() {
-            if (confirm("هل ترغبين في إعادة ضبط العداد؟")) {
-                localStorage.setItem("fak_days", 0);
-                loadDashboardData();
-            }
-        }
-
-        // حفظ التفريغ محلياً بالموقع فقط
-        function saveReleaseText() {
-            const area = document.getElementById("releaseArea");
-            if (!area.value.trim()) return;
-
-            const saved = JSON.parse(localStorage.getItem("fak_releases") || "[]");
-            saved.unshift({
-                id: Date.now(),
-                date: new Date().toLocaleDateString('ar-SA'),
-                text: area.value.trim()
-            });
-
-            localStorage.setItem("fak_releases", JSON.stringify(saved));
-            area.value = "";
-            loadReleaseHistory();
-        }
-
-        function loadReleaseHistory() {
-            const container = document.getElementById("savedReleaseList");
-            const saved = JSON.parse(localStorage.getItem("fak_releases") || "[]");
-
-            container.innerHTML = saved.length === 0 ? "<p style='color: var(--text-muted); font-size: 0.9rem;'>لا توجد نصوص محفوظة بعد.</p>" : "";
-
-            saved.forEach(item => {
-                const div = document.createElement("div");
-                div.className = "text-quote";
-                div.innerHTML = `<div class="source">${item.date}</div><p>${item.text}</p>`;
-                container.appendChild(div);
-            });
-        }
-
-        // آيات وأحاديث متجددة
-        function displayRandomQuote() {
-            const randomIndex = Math.floor(Math.random() * quotesList.length);
-            const quote = quotesList[randomIndex];
-
-            document.getElementById("welcomeQuoteText").innerText = quote.text;
-            document.getElementById("welcomeQuoteSource").innerText = quote.source;
-
-            document.getElementById("dynamicQuoteText").innerText = quote.text;
-            document.getElementById("dynamicQuoteSource").innerText = quote.source;
-        }
-    </script>
+    function deleteNaflDua(id) {
+      let savedNafl = JSON.parse(localStorage.getItem('daneh_nafl_duas') || '[]');
+      savedNafl = savedNafl.filter(d => d.id !== id);
+      localStorage.setItem('daneh_nafl_duas', JSON.stringify(savedNafl));
+      loadNaflDuas();
+    }
+  </script>
 </body>
 </html>
